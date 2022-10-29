@@ -1,0 +1,118 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+
+//afterEvaluate {
+//    def assetsSrcDir = "src/main/assets/source"
+//    delete assetsSrcDir
+//    mkdir assetsSrcDir
+//    for (filename in ["src/main/python/chaquopy/demo/ui_demo.py",
+//                      "src/main/java/com/chaquo/python/demo/JavaDemoActivity.java"]) {
+//        assert file(filename).exists()
+//        copy {
+//            from filename
+//            into assetsSrcDir
+//        }
+//    }
+//}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.example.testrecognize"
+        minSdk 16
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+        versionName '12.0.1'
+
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        sourceSets {
+            main {
+                python {
+                    srcDirs = ["src/main/python"]
+                }
+            }
+        }
+
+
+//        def verParsed = versionName.split(/\./).collect { Integer.parseInt(it) }
+//        versionCode((verParsed[0] * 1000000) + (verParsed[1] * 1000) + (verParsed[2] * 10) + 1)
+
+        python {
+            // If Chaquopy fails to find Python on your build machine, enable the following
+            // line and edit it to point to Python 3.5 or later.
+            // buildPython "C:/Python36/python.exe"
+//            C:\Users\nguye\Downloads\python3.8
+            buildPython "C:/Program Files/python/python.exe"
+//            buildPython "C:/Users/nguye/Downloads/python3.8/py.exe", "-3.8"
+            // Android UI demo
+            pip {
+                install "numpy"   // Also used in Java API demo
+            }
+//            staticProxy "chaquopy.demo.ui_demo"
+//
+//            // Python unit tests
+//            pip {
+//                install "murmurhash==0.28.0"  // Requires chaquopy-libcxx
+//            }
+//            staticProxy("chaquopy.test.static_proxy.basic", "chaquopy.test.static_proxy.header",
+//                    "chaquopy.test.static_proxy.method")
+            pyc {
+                // For testing bytecode compilation on device, and also to include test source
+                // code in stack traces.
+                src false
+            }
+
+        }
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+
+
+//        // Chaquopy generates extra internal-use constructors on static proxy classes.
+//        lintOptions {
+//            disable "ValidFragment"
+//        }
+//
+//        // Remove other languages imported from Android support libraries.
+//        resConfigs "en"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+//    applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            outputFileName = "demo-${variant.versionName}-${variant.name}.apk"
+//        }
+//    }
+
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+}
